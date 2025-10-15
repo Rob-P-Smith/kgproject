@@ -1,0 +1,32 @@
+# Environment variables (contains passwords)
+.env
+
+# Neo4j data directories
+neo4j/data/
+neo4j/logs/
+neo4j/plugins/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups
+*.tar.gz
+*.backup
