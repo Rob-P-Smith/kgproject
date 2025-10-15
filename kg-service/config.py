@@ -4,6 +4,7 @@ Handles environment variables and service settings
 """
 
 import os
+import logging.config
 from typing import Optional
 from pydantic_settings import BaseSettings
 from pydantic import Field

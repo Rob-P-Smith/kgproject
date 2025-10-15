@@ -74,63 +74,118 @@ kg-service/
   - Text processing libraries
   - Testing framework
 
-## 🚧 In Progress / To Be Implemented
+## ✅ Recently Completed Components
 
-### 7. Relationship Extractor (TODO)
+### 7. Relationship Extractor (✅ COMPLETE)
 - **File**: `extractors/relation_extractor.py`
-- **Requirements**:
-  - Use vLLM for LLM-based relationship extraction
-  - Extract relationships between entities
-  - Support multiple relationship types
-  - Include confidence scores
-  - Context preservation
+- **Features**:
+  - ✅ vLLM-based LLM relationship extraction
+  - ✅ 50+ semantic relationship types (technical, comparison, hierarchical, etc.)
+  - ✅ Confidence scoring and validation
+  - ✅ Context preservation with supporting text
+  - ✅ Automatic deduplication by (subject, predicate, object)
+  - ✅ Large document sectioning (8000 char chunks)
+  - ✅ JSON response parsing with error handling
+  - ✅ Global singleton instance pattern
 
-### 8. Neo4j Client (TODO)
-- **File**: `clients/neo4j_client.py` or `storage/neo4j_client.py`
-- **Requirements**:
-  - Connection management
-  - Entity storage with hierarchical types
-  - Relationship storage
-  - Co-occurrence tracking
-  - Query methods for graph traversal
-  - Batch operations
+### 8. Chunk Mapper (✅ COMPLETE)
+- **File**: `pipeline/chunk_mapper.py`
+- **Features**:
+  - ✅ Map entities to chunk boundaries using character positions
+  - ✅ Map relationships to chunks (cross-chunk detection)
+  - ✅ Track entity appearances across multiple chunks
+  - ✅ Calculate overlap with 10-char threshold
+  - ✅ Find primary chunk for relationships
+  - ✅ Generate mapping statistics
+  - ✅ Entity occurrence handling
 
-### 9. Graph Schema (TODO)
+### 9. Neo4j Client (✅ COMPLETE)
+- **File**: `storage/neo4j_client.py`
+- **Features**:
+  - ✅ Async Neo4j driver with connection pooling
+  - ✅ Document node creation (with content_id)
+  - ✅ Chunk node creation (with vector_rowid mapping)
+  - ✅ Entity node creation with hierarchical types
+  - ✅ Dynamic semantic relationship creation
+  - ✅ MENTIONED_IN relationships (entity → chunk)
+  - ✅ Co-occurrence tracking (CO_OCCURS_WITH)
+  - ✅ Health check and stats methods
+  - ✅ Async context manager support
+
+### 10. Graph Schema (✅ COMPLETE)
 - **File**: `storage/schema.py`
-- **Requirements**:
-  - Define node types (Entity, Document, Mention)
-  - Define relationship types
-  - Create indexes and constraints
-  - Schema initialization methods
+- **Features**:
+  - ✅ Node labels: Document, Chunk, Entity
+  - ✅ Structural relationships: HAS_CHUNK, MENTIONED_IN, CO_OCCURS_WITH
+  - ✅ 50+ semantic relationship types defined
+  - ✅ Uniqueness constraints (content_id, vector_rowid, normalized)
+  - ✅ Performance indexes (type_primary, type_full, text, url, chunk_index)
+  - ✅ Schema initialization and validation
+  - ✅ Schema info retrieval (constraints, indexes, counts)
+  - ✅ Data clearing utility (for testing)
 
-### 10. Processing Pipeline (TODO)
+### 11. Processing Pipeline (✅ COMPLETE)
 - **File**: `pipeline/processor.py`
-- **Requirements**:
-  - Orchestrate: markdown → GLiNER → vLLM → Neo4j
-  - Co-occurrence calculation
-  - Error handling and retry logic
-  - Progress tracking
-  - Async processing
+- **Features**:
+  - ✅ Full orchestration: GLiNER → vLLM → ChunkMapper → Neo4j
+  - ✅ Entity extraction with full document context
+  - ✅ Relationship extraction and mapping
+  - ✅ Automatic chunk mapping for entities and relationships
+  - ✅ Co-occurrence calculation and storage
+  - ✅ Error handling with detailed logging
+  - ✅ Processing time tracking
+  - ✅ Async initialization and shutdown
+  - ✅ Global singleton instance pattern
+  - ✅ Response formatting for API
 
-### 11. FastAPI Server (TODO)
-- **File**: `api/server.py` and `api/routes.py`
-- **Requirements**:
-  - POST `/api/v1/ingest` endpoint
-  - Accept: url, markdown, metadata
-  - Return: extraction statistics
-  - Health check endpoint
-  - Status endpoint
-  - Error handling
+### 12. FastAPI Server (✅ COMPLETE)
+- **File**: `api/server.py`
+- **Features**:
+  - ✅ POST `/api/v1/ingest` endpoint (main processing)
+  - ✅ GET `/health` with dependent service checks
+  - ✅ GET `/stats` for processing metrics
+  - ✅ GET `/api/v1/model-info` for model details
+  - ✅ Lifespan management (startup/shutdown)
+  - ✅ Request logging middleware
+  - ✅ Exception handlers (HTTP and general)
+  - ✅ CORS middleware
+  - ✅ Statistics tracking
 
-### 12. API Models (TODO)
+### 13. API Models (✅ COMPLETE)
 - **File**: `api/models.py`
-- **Requirements**:
-  - Pydantic models for requests/responses
-  - IngestRequest model
-  - IngestResponse model
-  - Error models
+- **Features**:
+  - ✅ IngestRequest with ChunkMetadata
+  - ✅ IngestResponse with full entity/relationship data
+  - ✅ ExtractedEntity with chunk_appearances
+  - ✅ ExtractedRelationship with chunk mapping
+  - ✅ HealthStatus with service dependencies
+  - ✅ ServiceStats for monitoring
+  - ✅ ErrorResponse with timestamps
+  - ✅ Comprehensive field validation
 
-### 13. Dockerfile (TODO)
+### 14. KG Service Client (✅ COMPLETE)
+- **File**: `kg-service-client.py`
+- **Features**:
+  - ✅ Async HTTP client for mcpragcrawl4ai
+  - ✅ ingest_document() method
+  - ✅ ingest_document_safe() for non-blocking
+  - ✅ Health check and stats methods
+  - ✅ Retry logic with exponential backoff
+  - ✅ Timeout configuration
+  - ✅ Context manager support
+
+### 15. Test Scripts (✅ COMPLETE)
+- **File**: `tests/test_relationship_extractor.py`
+- **Features**:
+  - ✅ Full pipeline test (entity → relation → chunk mapping)
+  - ✅ Sample technical document (FastAPI)
+  - ✅ Chunk simulation with overlap
+  - ✅ Mapping statistics validation
+  - ✅ Error handling for missing vLLM
+
+## 🚧 Still To Be Implemented
+
+### 16. Dockerfile (TODO)
 - **File**: `Dockerfile`
 - **Requirements**:
   - Python 3.11+ base
@@ -139,7 +194,7 @@ kg-service/
   - Expose port 8088
   - Entry point for FastAPI
 
-### 14. Docker Compose Integration (TODO)
+### 17. Docker Compose Integration (TODO)
 - **File**: `../docker-compose.yml` (update)
 - **Requirements**:
   - Add kg-service to compose file
@@ -148,7 +203,7 @@ kg-service/
   - Volume mounts
   - Depends on neo4j
 
-### 15. Test Data (TODO)
+### 18. Test Data (TODO)
 - **Files**: `tests/test_data/*.md`
 - **Requirements**:
   - Sample markdown files
@@ -156,77 +211,58 @@ kg-service/
   - Different entity densities
   - Test edge cases
 
-### 16. Test Scripts (TODO)
-- **Files**: `tests/test_*.py`
+### 19. Additional Test Scripts (TODO)
+- **Files**: `tests/test_api.py`, `tests/test_neo4j.py`
 - **Requirements**:
-  - Test entity extraction
-  - Test relationship extraction
-  - Test Neo4j storage
-  - Test full pipeline
-  - Integration tests
-
-### 17. Documentation (TODO)
-- **Files**: Various in `docs/`
-- **Requirements**:
-  - API documentation
-  - Full entity taxonomy reference
-  - Usage examples
-  - Integration guide with mcpragcrawl4ai
+  - API endpoint tests
+  - Neo4j storage tests
+  - Full integration tests
+  - Performance tests
 
 ## 🎯 Next Steps (Priority Order)
 
-1. **Implement Relationship Extractor**
-   - Create LLM prompts for relationship extraction
-   - Use vLLM client to extract relationships
-   - Parse and structure relationship data
+1. **Docker Configuration** ⬅️ NEXT
+   - Create Dockerfile for kg-service
+   - Update docker-compose.yml to include kg-service
+   - Configure environment variables
+   - Set up network connections
 
-2. **Create Neo4j Client**
-   - Connection management
-   - Entity storage with hierarchical types
-   - Relationship storage
-   - Query methods
+2. **Testing & Validation**
+   - Run test script to validate pipeline
+   - Test with real vLLM server
+   - Verify Neo4j schema creation
+   - End-to-end integration test
 
-3. **Build Processing Pipeline**
-   - Orchestrate all components
-   - Handle errors gracefully
-   - Add logging and monitoring
-
-4. **Create FastAPI Server**
-   - Implement /api/v1/ingest endpoint
-   - Add health checks
-   - Error handling
-
-5. **Docker Configuration**
-   - Dockerfile for kg-service
-   - Update docker-compose.yml
-   - Network configuration
-
-6. **Testing**
-   - Create test data
-   - Write unit tests
-   - Integration tests
-
-7. **Documentation**
-   - API documentation
-   - Usage guide
-   - Integration examples
+3. **mcpragcrawl4ai Integration**
+   - Integrate KG client into queue worker
+   - Add SQLite tables for chunk mapping
+   - Implement graph-enhanced search
+   - Test full crawl → extract → query flow
 
 ## 📊 Progress Summary
 
-- **Overall Progress**: ~40% complete
+- **Overall Progress**: ~85% complete ✅
 - **Core Architecture**: ✅ Complete
 - **Data Models**: ✅ Complete
-- **Extraction Layer**: 🚧 50% (GLiNER done, LLM relations pending)
-- **Storage Layer**: ❌ Not started
-- **API Layer**: ❌ Not started
-- **Testing**: ❌ Not started
+- **Extraction Layer**: ✅ Complete (GLiNER + vLLM relationship extraction)
+- **Storage Layer**: ✅ Complete (Neo4j client + schema)
+- **Processing Pipeline**: ✅ Complete (Full orchestration)
+- **API Layer**: ✅ Complete (FastAPI server + models)
+- **Client Library**: ✅ Complete (kg-service-client.py)
+- **Testing**: 🚧 50% (Test script created, needs execution)
+- **Docker Setup**: ❌ Not started (Dockerfile + compose update needed)
 
-## 🚀 Ready to Continue
+## 🚀 Ready for Docker & Testing
 
-The foundation is solid. Next, we should implement:
-1. Relationship extractor with vLLM
-2. Neo4j storage layer
-3. Processing pipeline
-4. FastAPI endpoints
+The core kg-service implementation is **COMPLETE**! We have:
 
-Then we can test the full pipeline end-to-end!
+✅ **Entity Extraction**: GLiNER with 300+ hierarchical entity types
+✅ **Relationship Extraction**: vLLM-based LLM extraction with 50+ relationship types
+✅ **Chunk Mapping**: Precise entity/relationship to chunk mapping
+✅ **Neo4j Storage**: Full graph database integration
+✅ **Processing Pipeline**: Complete orchestration
+✅ **FastAPI Server**: All endpoints implemented
+✅ **Client Library**: Ready for mcpragcrawl4ai integration
+✅ **Documentation**: API_COMMUNICATION.md, KGPlan.md, RetrievalPlan.md
+
+**Next: Create Dockerfile and update docker-compose.yml, then test the full pipeline!**

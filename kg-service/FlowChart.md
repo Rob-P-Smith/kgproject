@@ -1,7 +1,7 @@
 NEW Flow (Graph-Enhanced RAG):
 User query: "FastAPI best practices"
    ↓
-1. 🔍 Neo4j Graph Exploration (FIRST!)
+1. 🔍 Neo4j Graph Exploration (FIRST)
    │
    ├─ Parse query for entities: "FastAPI"
    │
@@ -17,7 +17,7 @@ User query: "FastAPI best practices"
    │   - content_ids: [123, 456, 789, ...]
    │
    ↓
-2. 🎯 Vector Search (SECOND - but now graph-informed!)
+2. 🎯 Vector Search (SECOND - but now graph-informed)
    │
    ├─ Expand query with graph entities:
    │   Original: "FastAPI best practices"
