@@ -78,6 +78,11 @@ async def lifespan(app: FastAPI):
         logger.info("Initializing KG processor...")
         kg_processor = KGProcessor()
 
+        # Initialize Neo4j connection
+        if not await kg_processor.initialize():
+            logger.error("Failed to initialize KG processor (Neo4j connection failed)")
+            raise RuntimeError("KG processor initialization failed")
+
         # Wait for vLLM to be available (async, non-blocking)
         logger.info("Checking vLLM availability...")
         vllm_client = await get_vllm_client()

@@ -118,6 +118,9 @@ class Neo4jClient:
         Returns:
             Neo4j node ID (elementId)
         """
+        # Neo4j can't store empty dicts, so convert None or empty dict to null
+        metadata_value = metadata if (metadata and len(metadata) > 0) else None
+
         query = """
         MERGE (d:Document {content_id: $content_id})
         SET d.url = $url,
@@ -134,7 +137,7 @@ class Neo4jClient:
                 content_id=content_id,
                 url=url,
                 title=title,
-                metadata=metadata
+                metadata=metadata_value
             )
             record = await result.single()
             return record["node_id"]

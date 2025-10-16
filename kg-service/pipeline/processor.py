@@ -233,6 +233,10 @@ class KGProcessor:
         # Create Entity nodes and build entity_id map
         entity_node_map = {}  # normalized -> node_id
         for entity in entities:
+            # Debug: log first entity to check type fields
+            if not entity_node_map:
+                logger.info(f"DEBUG first entity: text={entity.get('text')}, type_primary={entity.get('type_primary')}, type_full={entity.get('type_full')}")
+
             entity_node_id = await self.neo4j_client.create_entity(
                 text=entity["text"],
                 normalized=entity["normalized"],
@@ -270,8 +274,8 @@ class KGProcessor:
                 context=rel["context"]
             )
 
-        # Update co-occurrence relationships
-        await self._update_co_occurrences(entities, chunks)
+        # Update co-occurrence relationships - DISABLED (creates too many relationships)
+        # await self._update_co_occurrences(entities, chunks)
 
         return {
             "document_node_id": doc_node_id,

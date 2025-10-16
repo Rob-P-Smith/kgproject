@@ -1,446 +1,243 @@
-# Comprehensive Entity Taxonomy for Knowledge Graph
-# Format: Primary::Sub1::Sub2::Sub3
-# Each entity can have up to 3 subtypes for hierarchical classification
+# Streamlined Entity Taxonomy for Knowledge Graph
+# ~100-110 types with broad coverage and general utility types
+# Format: Primary::Sub1::Sub2 (hierarchical when useful)
 
 entity_categories:
 
   # ============================================================================
-  # PROGRAMMING LANGUAGES (40 types)
+  # TECHNOLOGY & SOFTWARE (30 types)
   # ============================================================================
-  programming_languages:
-    - Language::Compiled::StaticTyped::Systems     # C, C++, Rust
-    - Language::Compiled::StaticTyped::Managed     # Java, C#, Go
-    - Language::Compiled::StaticTyped::Functional  # Haskell, OCaml
-    - Language::Interpreted::DynamicTyped::Scripting  # Python, Ruby, PHP
-    - Language::Interpreted::DynamicTyped::Shell   # Bash, PowerShell, Zsh
-    - Language::Interpreted::StaticTyped::Web      # TypeScript
-    - Language::Functional::Pure::Academic         # Haskell, Idris, Agda
-    - Language::Functional::Hybrid::Industrial     # Scala, F#, Elixir, Clojure
-    - Language::SystemLevel::LowLevel::Assembly    # x86, ARM Assembly
-    - Language::SystemLevel::LowLevel::Bare        # C, Zig
-    - Language::Query::Database::SQL               # SQL, T-SQL, PL/SQL
-    - Language::Query::Database::NoSQL             # Cypher, Gremlin
-    - Language::Query::Data::Declarative           # GraphQL, SPARQL
-    - Language::Markup::Web::HTML                  # HTML, HTML5
-    - Language::Markup::Data::XML                  # XML, XSLT
-    - Language::Markup::Documentation::Markdown    # Markdown, MDX, AsciiDoc
-    - Language::Stylesheet::Web::CSS               # CSS, SCSS, SASS, Less
-    - Language::Configuration::Declarative::YAML   # YAML, TOML
-    - Language::Configuration::Declarative::JSON   # JSON, JSON5
+  technology:
+    # General Software Categories
+    - Technology::Software                         # Any software
+    - Technology::Framework                        # Any framework
+    - Technology::Library                          # Any library
+    - Technology::Tool                             # Any tool
+    - Technology::Platform                         # Any platform
+    - Technology::Application                      # Any application
+    - Technology::Service                          # Any service
+    - Technology::API                              # Any API
 
-  # ============================================================================
-  # FRAMEWORKS & LIBRARIES (80 types)
-  # ============================================================================
-  frameworks:
-    # Frontend Frameworks
-    - Framework::Frontend::React::Core             # React.js
-    - Framework::Frontend::React::Meta             # Next.js, Remix, Gatsby
-    - Framework::Frontend::React::Native           # React Native, Expo
-    - Framework::Frontend::Vue::Core               # Vue.js
-    - Framework::Frontend::Vue::Meta               # Nuxt.js, Quasar
-    - Framework::Frontend::Angular::Core           # Angular
-    - Framework::Frontend::Svelte::Core            # Svelte, SvelteKit
-    - Framework::Frontend::WebComponents::Standard # Lit, Stencil
-    - Framework::Frontend::Mobile::CrossPlatform   # Flutter, Ionic
+    # Programming
+    - Programming::Language                        # Any programming language
+    - Programming::Framework                       # Programming frameworks
+    - Programming::Library                         # Programming libraries
+    - Programming::Runtime                         # Runtime environments
 
-    # Backend Frameworks
-    - Framework::Backend::Node::Express            # Express.js, Fastify
-    - Framework::Backend::Node::Enterprise         # Nest.js, Adonis.js
-    - Framework::Backend::Python::Sync             # Django, Flask, Pyramid
-    - Framework::Backend::Python::Async            # FastAPI, Sanic, Quart
-    - Framework::Backend::DotNet::Web              # ASP.NET Core, Blazor
-    - Framework::Backend::Java::Spring             # Spring Boot, Spring Cloud
-    - Framework::Backend::Java::Jakarta            # Jakarta EE, Quarkus
-    - Framework::Backend::Go::Web                  # Gin, Echo, Fiber
-    - Framework::Backend::Rust::Web                # Actix, Rocket, Axum
-    - Framework::Backend::Ruby::Web                # Rails, Sinatra, Hanami
-    - Framework::Backend::PHP::Modern              # Laravel, Symfony
+    # Web Technologies
+    - Web::Framework                               # Web frameworks (frontend/backend)
+    - Web::Server                                  # Web servers
+    - Web::Browser                                 # Web browsers
+    - Web::Protocol                                # Web protocols
 
-    # Fullstack Frameworks
-    - Framework::Fullstack::Meta::React            # Next.js, Remix
-    - Framework::Fullstack::Meta::Vue              # Nuxt.js
-    - Framework::Fullstack::Meta::Svelte           # SvelteKit
-    - Framework::Fullstack::Traditional::MVC       # Django, Rails
+    # Development
+    - Development::IDE                             # IDEs and editors
+    - Development::Tool                            # Development tools
+    - Development::BuildSystem                     # Build systems
+    - Development::PackageManager                  # Package managers
+    - Development::VersionControl                  # Version control systems
 
-    # Testing Frameworks
-    - Framework::Testing::Unit::JavaScript         # Jest, Vitest, Mocha
-    - Framework::Testing::Unit::Python             # Pytest, unittest
-    - Framework::Testing::Unit::Java               # JUnit, TestNG
-    - Framework::Testing::Unit::DotNet             # NUnit, xUnit
-    - Framework::Testing::E2E::Browser             # Playwright, Cypress, Selenium
-    - Framework::Testing::E2E::API                 # Postman, REST-assured
-    - Framework::Testing::Performance::Load        # K6, JMeter, Locust
+    # Testing & Quality
+    - Testing::Framework                           # Testing frameworks
+    - Testing::Tool                                # Testing tools
 
-    # UI Component Libraries
-    - Library::UI::React::Component                # Material-UI, Ant Design, Chakra
-    - Library::UI::React::Headless                 # Headless UI, Radix UI
-    - Library::UI::Vue::Component                  # Vuetify, Element Plus
-    - Library::UI::CSS::Utility                    # Tailwind CSS, UnoCSS
-    - Library::UI::CSS::Component                  # Bootstrap, Bulma
+    # Hardware
+    - Hardware::Processor                          # CPUs, GPUs, TPUs
+    - Hardware::Device                             # Computing devices
+    - Hardware::Component                          # Hardware components
 
-    # State Management
-    - Library::State::React::Client                # Redux, Zustand, Jotai
-    - Library::State::React::Server                # TanStack Query, SWR
-    - Library::State::Vue::Official                # Vuex, Pinia
-    - Library::State::Universal::Immutable         # Immer, Immutable.js
-
-    # Data Fetching
-    - Library::Data::GraphQL::Client               # Apollo Client, urql, Relay
-    - Library::Data::REST::Client                  # Axios, ky, fetch
-    - Library::Data::Validation::Schema            # Zod, Yup, Joi, Ajv
+    # Operating Systems
+    - OperatingSystem::Desktop                     # Desktop OSes
+    - OperatingSystem::Server                      # Server OSes
+    - OperatingSystem::Mobile                      # Mobile OSes
+    - OperatingSystem::Embedded                    # Embedded OSes
 
   # ============================================================================
-  # AI & MACHINE LEARNING (90 types)
+  # DATABASES & DATA (12 types)
   # ============================================================================
-  ai_ml:
-    # Large Language Models - Open Source
-    - AI::LLM::OpenSource::Small::7B               # Mistral-7B, Llama-3.1-8B, Qwen2.5-7B
-    - AI::LLM::OpenSource::Medium::13B             # Llama-13B, Vicuna-13B
-    - AI::LLM::OpenSource::Large::30B-70B          # Llama-70B, Mixtral-8x7B, Yi-34B
-    - AI::LLM::OpenSource::XLarge::100B+           # Llama-405B, DeepSeek-V3, Qwen2.5-72B
+  data:
+    # Databases
+    - Database::Relational                         # SQL databases
+    - Database::NoSQL                              # NoSQL databases
+    - Database::Graph                              # Graph databases
+    - Database::Vector                             # Vector databases
+    - Database::InMemory                           # In-memory databases
+    - Database::Search                             # Search engines
 
-    # LLM Specialized Models
-    - AI::LLM::Specialized::Code::General          # CodeLlama, StarCoder, DeepSeek-Coder
-    - AI::LLM::Specialized::Code::Instruct         # CodeLlama-Instruct, WizardCoder
-    - AI::LLM::Specialized::Math::Reasoning        # DeepSeek-Math, Llemma, MathΣtral
-    - AI::LLM::Specialized::Medical::Clinical      # Med-PaLM, BioGPT
-    - AI::LLM::Specialized::Legal::Contracts       # Legal-BERT, SaulLM
-    - AI::LLM::Specialized::Finance::Analysis      # BloombergGPT, FinGPT
-
-    # LLM Multimodal
-    - AI::LLM::Multimodal::Vision::Understanding   # GPT-4V, Claude-3, LLaVA, Qwen2-VL
-    - AI::LLM::Multimodal::Vision::Generation      # DALL-E, Stable Diffusion, Midjourney
-    - AI::LLM::Multimodal::Audio::Speech           # Whisper, Wav2Vec2
-    - AI::LLM::Multimodal::Audio::Music            # MusicGen, AudioCraft
-    - AI::LLM::Multimodal::Video::Understanding    # Video-LLaMA, VideoChat
-
-    # Proprietary LLMs
-    - AI::LLM::Proprietary::Closed::Frontier       # GPT-4, Claude-3.5, Gemini-Ultra
-    - AI::LLM::Proprietary::Closed::Production     # GPT-3.5, Claude-3, Gemini-Pro
-    - AI::LLM::Proprietary::API::Specialized       # Cohere, AI21 Labs
-
-    # Inference Engines
-    - AI::Inference::Engine::vLLM::Core            # vLLM, PagedAttention
-    - AI::Inference::Engine::TensorRT::LLM         # TensorRT-LLM, TensorRT
-    - AI::Inference::Engine::Native::GGML          # llama.cpp, ggml
-    - AI::Inference::Engine::Native::ExLlama       # ExLlamaV2, TabbyAPI
-    - AI::Inference::Engine::Server::Managed       # Ollama, LM Studio, GPT4All
-    - AI::Inference::Engine::Server::Enterprise    # Text-Generation-Inference, Ray Serve
-
-    # Inference Providers
-    - AI::Inference::Provider::Cloud::Major        # OpenAI, Anthropic, Google
-    - AI::Inference::Provider::Cloud::Aggregator   # Together.ai, Replicate, Anyscale
-    - AI::Inference::Provider::SelfHosted::Open    # vLLM, TGI, LocalAI
-    - AI::Inference::Provider::Edge::Device        # ONNX Runtime, TFLite
-
-    # Model Formats & Quantization
-    - AI::Format::Quantization::GPTQ               # GPTQ, AutoGPTQ
-    - AI::Format::Quantization::AWQ                # AWQ, AutoAWQ
-    - AI::Format::Quantization::GGUF               # GGUF (llama.cpp)
-    - AI::Format::Quantization::EXL2               # EXL2 (ExLlamaV2)
-    - AI::Format::Quantization::ONNX               # ONNX, ONNX Runtime
-    - AI::Format::Weight::Safetensors              # Safetensors, PyTorch
-
-    # ML Frameworks
-    - AI::Framework::Training::DeepLearning::PyTorch  # PyTorch, Lightning
-    - AI::Framework::Training::DeepLearning::TensorFlow  # TensorFlow, Keras
-    - AI::Framework::Training::DeepLearning::JAX   # JAX, Flax, Equinox
-    - AI::Framework::Training::Classic::TreeBased  # XGBoost, LightGBM, CatBoost
-    - AI::Framework::Training::Classic::General    # scikit-learn
-    - AI::Framework::Training::Distributed::Data   # DeepSpeed, FSDP, DDP
-    - AI::Framework::Training::Distributed::Model  # Megatron-LM, Alpa
-
-    # Embeddings & Vector
-    - AI::Framework::Vector::Embedding::Sentence   # SentenceTransformers, Instructor
-    - AI::Framework::Vector::Embedding::Document   # BGE, E5, GTE
-    - AI::Framework::Vector::Embedding::Specialized  # OpenAI Ada, Cohere Embed
-
-    # RAG & Orchestration
-    - AI::Framework::RAG::Pipeline::Python         # LangChain, LlamaIndex
-    - AI::Framework::RAG::Pipeline::TypeScript     # LangChain.js, LlamaIndex.TS
-    - AI::Framework::RAG::Search::Semantic         # Haystack, txtai
-    - AI::Framework::Agent::Autonomous::Python     # AutoGPT, BabyAGI, CrewAI
-    - AI::Framework::Agent::Autonomous::TypeScript # AutoGPT.js, LangGraph
-
-    # ML Components
-    - AI::Component::Embedding::Model::English     # all-MiniLM-L6-v2, gte-base
-    - AI::Component::Embedding::Model::Multilingual  # mBERT, XLM-RoBERTa
-    - AI::Component::Tokenizer::Type::BPE          # GPT, Llama tokenizers
-    - AI::Component::Tokenizer::Type::WordPiece    # BERT tokenizer
-    - AI::Component::Tokenizer::Type::SentencePiece  # T5, XLNet tokenizers
-    - AI::Component::Attention::Mechanism::MultiHead  # Standard Transformer
-    - AI::Component::Attention::Mechanism::Flash   # Flash Attention
-    - AI::Component::Attention::Mechanism::Paged   # PagedAttention (vLLM)
-    - AI::Component::Architecture::Transformer::Encoder  # BERT-style
-    - AI::Component::Architecture::Transformer::Decoder  # GPT-style
-    - AI::Component::Architecture::Transformer::EncoderDecoder  # T5-style
-
-    # Training Techniques
-    - AI::Training::FineTuning::Full::Supervised   # Full fine-tuning
-    - AI::Training::FineTuning::PEFT::LoRA         # LoRA, QLoRA
-    - AI::Training::FineTuning::PEFT::Adapter      # Adapter tuning
-    - AI::Training::FineTuning::PEFT::Prefix       # Prefix tuning
-    - AI::Training::Alignment::RLHF                # RLHF
-    - AI::Training::Alignment::DPO                 # DPO, IPO
-    - AI::Training::Alignment::Constitutional      # Constitutional AI
+    # Data Systems
+    - Data::Warehouse                              # Data warehouses
+    - Data::Lake                                   # Data lakes
+    - Data::Pipeline                               # Data pipelines
+    - Data::Processing                             # Data processing systems
+    - Data::Analytics                              # Analytics platforms
+    - Data::Visualization                          # Visualization tools
 
   # ============================================================================
-  # DATABASES & DATA STORES (50 types)
+  # AI & MACHINE LEARNING (15 types)
   # ============================================================================
-  databases:
-    # Relational Databases
-    - Database::Relational::OLTP::OpenSource       # PostgreSQL, MySQL, MariaDB
-    - Database::Relational::OLTP::Commercial       # Oracle, SQL Server, DB2
-    - Database::Relational::OLTP::Embedded         # SQLite, DuckDB
-    - Database::Relational::OLAP::ColumnStore      # ClickHouse, DuckDB
-    - Database::Relational::OLAP::Cloud            # Snowflake, BigQuery, Redshift
-    - Database::Relational::NewSQL::Distributed    # CockroachDB, TiDB, YugabyteDB
+  ai:
+    # AI Models
+    - AI::Model                                    # Any AI model
+    - AI::LLM                                      # Large language models
+    - AI::VisionModel                              # Computer vision models
+    - AI::AudioModel                               # Audio/speech models
+    - AI::MultimodalModel                          # Multimodal models
 
-    # NoSQL Databases
-    - Database::NoSQL::Document::General           # MongoDB, CouchDB, RavenDB
-    - Database::NoSQL::Document::Embedded          # LiteDB, UnQLite
-    - Database::NoSQL::KeyValue::InMemory          # Redis, Memcached, KeyDB
-    - Database::NoSQL::KeyValue::Persistent        # RocksDB, LevelDB, etcd
-    - Database::NoSQL::KeyValue::Distributed       # Riak, Aerospike
-    - Database::NoSQL::ColumnFamily::Wide          # Cassandra, HBase, ScyllaDB
-    - Database::NoSQL::TimeSeries::Specialized     # InfluxDB, TimescaleDB, QuestDB
-    - Database::NoSQL::TimeSeries::TSBS            # Prometheus, VictoriaMetrics
+    # ML Systems
+    - MachineLearning::Framework                   # ML frameworks
+    - MachineLearning::Library                     # ML libraries
+    - MachineLearning::Algorithm                   # ML algorithms
 
-    # Graph Databases
-    - Database::Graph::Labeled::Native             # Neo4j, Memgraph, FalkorDB
-    - Database::Graph::Labeled::Extension          # Apache AGE (PostgreSQL)
-    - Database::Graph::RDF::TripleStore            # Blazegraph, Stardog, GraphDB
-    - Database::Graph::Hybrid::MultiModel          # ArangoDB, OrientDB
+    # AI Infrastructure
+    - AI::InferenceEngine                          # Inference engines
+    - AI::TrainingSystem                           # Training systems
+    - AI::Orchestration                            # AI orchestration (LangChain, etc.)
 
-    # Vector Databases
-    - Database::Vector::Native::Cloud              # Pinecone, Weaviate
-    - Database::Vector::Native::SelfHosted         # Qdrant, Milvus, Chroma
-    - Database::Vector::Extension::PostgreSQL      # pgvector, pgvecto.rs
-    - Database::Vector::Extension::SQLite          # sqlite-vec, sqlite-vss
-    - Database::Vector::Hybrid::Search             # Vespa, Typesense
-
-    # Specialized Databases
-    - Database::Cache::InMemory::Distributed       # Redis, Hazelcast, Memcached
-    - Database::Search::FullText::Elasticsearch    # Elasticsearch, OpenSearch
-    - Database::Search::FullText::Lightweight      # Meilisearch, Typesense, Sonic
-    - Database::Queue::MessageBroker::Durable      # RabbitMQ, Apache Kafka
-    - Database::Queue::MessageBroker::InMemory     # Redis Streams, NATS
-    - Database::Embedded::Mobile::Local            # Realm, WatermelonDB
-    - Database::ObjectStorage::S3Compatible        # MinIO, SeaweedFS, Ceph
+    # AI Services
+    - AI::Provider                                 # AI providers
+    - AI::Service                                  # AI services
+    - AI::Platform                                 # AI platforms
+    - AI::Agent                                    # AI agents
 
   # ============================================================================
-  # INFRASTRUCTURE & DEVOPS (60 types)
+  # CLOUD & INFRASTRUCTURE (15 types)
   # ============================================================================
   infrastructure:
-    # Cloud Providers
-    - Cloud::Provider::Hyperscaler::AWS            # Amazon Web Services
-    - Cloud::Provider::Hyperscaler::Azure          # Microsoft Azure
-    - Cloud::Provider::Hyperscaler::GCP            # Google Cloud Platform
-    - Cloud::Provider::Specialized::Compute        # DigitalOcean, Linode, Vultr, Hetzner
-    - Cloud::Provider::Specialized::Edge           # Cloudflare, Fastly, Vercel, Netlify
-    - Cloud::Provider::Specialized::Serverless     # Vercel, Netlify, Railway
+    # Cloud
+    - Cloud::Provider                              # Cloud providers
+    - Cloud::Service                               # Cloud services
+    - Cloud::Platform                              # Cloud platforms
+    - Cloud::Compute                               # Compute services
+    - Cloud::Storage                               # Storage services
+    - Cloud::Database                              # Managed databases
 
-    # Cloud Services - Compute
-    - Cloud::Service::Compute::VM::IaaS            # EC2, Compute Engine, Azure VM
-    - Cloud::Service::Compute::Container::Managed  # ECS, Cloud Run, ACI
-    - Cloud::Service::Compute::Serverless::Function  # Lambda, Cloud Functions, Azure Functions
-    - Cloud::Service::Compute::Serverless::Container  # Fargate, Cloud Run, App Runner
-    - Cloud::Service::Compute::Kubernetes::Managed # EKS, GKE, AKS
+    # Containers
+    - Container::Runtime                           # Container runtimes
+    - Container::Orchestration                     # Kubernetes, etc.
+    - Container::Registry                          # Container registries
 
-    # Cloud Services - Storage
-    - Cloud::Service::Storage::Object::S3          # S3, GCS, Azure Blob
-    - Cloud::Service::Storage::Block::SAN          # EBS, Persistent Disk, Azure Disk
-    - Cloud::Service::Storage::File::NFS           # EFS, Filestore, Azure Files
-
-    # Cloud Services - Database
-    - Cloud::Service::Database::Relational::Managed  # RDS, Cloud SQL, Azure SQL
-    - Cloud::Service::Database::NoSQL::Managed     # DynamoDB, Firestore, Cosmos DB
-    - Cloud::Service::Database::Cache::Managed     # ElastiCache, MemoryStore, Azure Cache
-
-    # Containerization
-    - Container::Runtime::Docker::Engine           # Docker, containerd, CRI-O
-    - Container::Runtime::Docker::Desktop          # Docker Desktop, Podman Desktop
-    - Container::Runtime::Alternative::Rootless    # Podman, Buildah
-    - Container::Orchestration::Kubernetes::Full   # Kubernetes, K3s, MicroK8s
-    - Container::Orchestration::Kubernetes::Distro # OpenShift, Rancher, Tanzu
-    - Container::Orchestration::Alternative::Swarm # Docker Swarm, Nomad
-    - Container::Registry::Public::Hub             # Docker Hub, GHCR, Quay.io
-    - Container::Registry::Private::SelfHosted     # Harbor, Artifactory, Registry
-
-    # Build & CI/CD
-    - Tool::CI/CD::Platform::GitOps                # GitHub Actions, GitLab CI, Bitbucket Pipelines
-    - Tool::CI/CD::Platform::Traditional           # Jenkins, CircleCI, Travis CI
-    - Tool::CI/CD::Platform::Modern                # Drone, Tekton, Argo Workflows
-    - Tool::CD::GitOps::Kubernetes                 # ArgoCD, Flux, Rancher Fleet
-    - Tool::Build::Container::Image                # Docker Build, Buildah, Kaniko
-    - Tool::Build::Container::Multi                # BuildKit, Buildx
-
-    # Infrastructure as Code
-    - Tool::IaC::Declarative::Terraform            # Terraform, OpenTofu
-    - Tool::IaC::Declarative::CloudFormation       # CloudFormation, CDK
-    - Tool::IaC::Imperative::Pulumi                # Pulumi
-    - Tool::IaC::Configuration::Ansible            # Ansible, Salt
-    - Tool::IaC::Provisioning::Packer              # Packer, Vagrant
+    # Infrastructure Tools
+    - Infrastructure::IaC                          # Infrastructure as Code
+    - Infrastructure::Configuration                # Configuration management
+    - Infrastructure::Monitoring                   # Monitoring tools
+    - Infrastructure::Logging                      # Logging systems
 
     # Networking
-    - Network::Protocol::Application::HTTP         # HTTP/1.1, HTTP/2, HTTP/3
-    - Network::Protocol::Application::WebSocket    # WebSocket, Socket.io
-    - Network::Protocol::Application::gRPC         # gRPC, gRPC-Web
-    - Network::Protocol::Transport::TCP            # TCP
-    - Network::Protocol::Transport::UDP            # UDP, QUIC
-    - Network::LoadBalancer::Proxy::Reverse        # Nginx, HAProxy, Traefik, Envoy
-    - Network::LoadBalancer::Proxy::Forward        # Squid, Privoxy
-    - Network::LoadBalancer::Cloud::Managed        # ALB, NLB, Cloud Load Balancing
-    - Network::API::Gateway::Managed               # Kong, Tyk, Ambassador, AWS API Gateway
-    - Network::ServiceMesh::Kubernetes             # Istio, Linkerd, Consul Connect
-
-    # Monitoring & Observability
-    - Tool::Monitoring::Metrics::TimeSeries        # Prometheus, VictoriaMetrics, Mimir
-    - Tool::Monitoring::Metrics::APM               # Datadog, New Relic, Dynatrace
-    - Tool::Monitoring::Logs::Aggregation          # Elasticsearch, Loki, Splunk
-    - Tool::Monitoring::Traces::Distributed        # Jaeger, Zipkin, Tempo
-    - Tool::Monitoring::Visualization::Dashboard   # Grafana, Kibana
+    - Network::Protocol                            # Network protocols
+    - Network::Infrastructure                      # Network infrastructure
 
   # ============================================================================
-  # DEVELOPMENT TOOLS (40 types)
+  # ORGANIZATIONS (14 types)
   # ============================================================================
-  development_tools:
-    # Version Control
-    - Tool::VersionControl::Git::CLI               # Git
-    - Tool::VersionControl::Git::GUI               # GitKraken, Tower, SourceTree
-    - Tool::VersionControl::Platform::Cloud        # GitHub, GitLab, Bitbucket
-    - Tool::VersionControl::Platform::SelfHosted   # Gitea, Gogs, Forgejo
+  organizations:
+    # Companies
+    - Company::Technology                          # Tech companies
+    - Company::Software                            # Software companies
+    - Company::AI                                  # AI companies (OpenAI, Anthropic, Mistral)
+    - Company::Cloud                               # Cloud providers (AWS, Microsoft, Google)
+    - Company::Database                            # Database companies (MongoDB, Neo4j, Redis Labs)
+    - Company::Startup                             # Startups
+    - Company::Enterprise                          # Enterprise companies (Microsoft, Oracle, SAP)
 
-    # Build Systems
-    - Tool::BuildSystem::JavaScript::Bundler       # Webpack, Vite, Rollup, esbuild, Parcel
-    - Tool::BuildSystem::JavaScript::Transpiler    # Babel, SWC, tsc
-    - Tool::BuildSystem::JavaScript::TaskRunner    # npm scripts, Gulp, Grunt
-    - Tool::BuildSystem::Compiled::CMake           # CMake, Make
-    - Tool::BuildSystem::Compiled::Gradle          # Gradle, Maven
-    - Tool::BuildSystem::Compiled::MSBuild         # MSBuild, dotnet build
-    - Tool::BuildSystem::Compiled::Cargo           # Cargo (Rust)
-
-    # Package Managers
-    - Tool::PackageManager::JavaScript::npm        # npm, npx
-    - Tool::PackageManager::JavaScript::Alternative  # yarn, pnpm, bun
-    - Tool::PackageManager::Python::pip            # pip, pip-tools
-    - Tool::PackageManager::Python::Modern         # poetry, pdm, uv
-    - Tool::PackageManager::System::Debian         # apt, dpkg
-    - Tool::PackageManager::System::RedHat         # yum, dnf, rpm
-    - Tool::PackageManager::System::Universal      # snap, flatpak, homebrew
-
-    # IDEs & Editors
-    - Tool::IDE::Editor::VSCode                    # Visual Studio Code, VSCodium
-    - Tool::IDE::Editor::JetBrains                 # IntelliJ, PyCharm, WebStorm
-    - Tool::IDE::Editor::AI                        # Cursor, Windsurf, Zed
-    - Tool::IDE::Editor::Terminal                  # Vim, Neovim, Emacs, Nano
-    - Tool::IDE::Editor::Lightweight               # Sublime Text, Atom
-    - Tool::IDE::Visual::Enterprise                # Visual Studio, Xcode
-
-    # Linters & Formatters
-    - Tool::Linter::JavaScript::ESLint             # ESLint, Biome
-    - Tool::Linter::Python::Ruff                   # Ruff, Pylint, Flake8
-    - Tool::Linter::TypeScript::Native             # tsc, ts-standard
-    - Tool::Formatter::JavaScript::Prettier        # Prettier, Biome
-    - Tool::Formatter::Python::Black               # Black, autopep8, yapf
-    - Tool::Formatter::Multi::Language             # EditorConfig, Prettier
-
-    # Documentation
-    - Tool::Documentation::API::Generator          # Swagger, OpenAPI, GraphQL Schema
-    - Tool::Documentation::Code::Generator         # JSDoc, TypeDoc, Sphinx, Doxygen
-    - Tool::Documentation::Static::Site            # Docusaurus, VitePress, MkDocs, Hugo
+    # Organizations
+    - Organization::OpenSource                     # Open source orgs
+    - Organization::Foundation                     # Foundations (Linux Foundation, Apache, CNCF)
+    - Organization::Research                       # Research organizations
+    - Organization::Research::AI                   # AI research labs (DeepMind, FAIR, Google Brain)
+    - Organization::Research::Academic             # Academic institutions (MIT CSAIL, Stanford AI Lab)
+    - Organization::Academic                       # Universities, institutions
+    - Organization::Consortium                     # Industry consortiums
 
   # ============================================================================
-  # CONCEPTS & METHODOLOGIES (50 types)
+  # PEOPLE (6 types)
+  # ============================================================================
+  people:
+    - Person::Developer                            # Software developers, engineers
+    - Person::Researcher                           # AI researchers, scientists
+    - Person::Executive                            # CEOs, CTOs, founders
+    - Person::Author                               # Authors, writers
+    - Person::Expert                               # Domain experts
+    - Person::Contributor                          # Contributors
+
+  # ============================================================================
+  # LOCATIONS (10 types)
+  # ============================================================================
+  locations:
+    - Location::Continent                          # North America, Europe, Asia
+    - Location::Country                            # United States, China, UK
+    - Location::Region                             # Regions, states, provinces
+    - Location::City                               # Cities
+    - Location::TechHub                            # Tech hubs (San Francisco, Seattle, London)
+    - Location::Datacenter                         # Data center locations
+    - Location::Office                             # Office locations
+    - Location::Campus                             # Corporate campuses
+    - Location::Venue                              # Event venues
+    - Location::Zone                               # Geographic zones, availability zones
+
+  # ============================================================================
+  # TEMPORAL (7 types)
+  # ============================================================================
+  temporal:
+    - Date::Year                                   # Years
+    - Date::Month                                  # Months
+    - Date::Day                                    # Specific dates
+    - Date::Event                                  # Event dates (releases, launches, announcements)
+    - Date::Period                                 # Time periods, eras (AI era, Web3 era)
+    - Date::Version                                # Version numbers/dates
+    - Date::Timestamp                              # Timestamps
+
+  # ============================================================================
+  # CONCEPTS & METHODOLOGIES (8 types)
   # ============================================================================
   concepts:
-    # Programming Paradigms
-    - Concept::Paradigm::Programming::OOP          # Object-Oriented Programming
-    - Concept::Paradigm::Programming::Functional   # Functional Programming
-    - Concept::Paradigm::Programming::Procedural   # Procedural Programming
-    - Concept::Paradigm::Programming::Declarative  # Declarative Programming
-    - Concept::Paradigm::Programming::Reactive     # Reactive Programming
-
-    # Software Architecture
-    - Concept::Architecture::Distributed::Microservices  # Microservices
-    - Concept::Architecture::Distributed::SOA      # Service-Oriented Architecture
-    - Concept::Architecture::Monolithic::Modular   # Modular Monolith
-    - Concept::Architecture::Serverless::FaaS      # Function as a Service
-    - Concept::Architecture::EventDriven::CQRS     # CQRS, Event Sourcing
-    - Concept::Architecture::Clean::Layers         # Clean Architecture, Hexagonal
-    - Concept::Architecture::Pattern::MVC          # Model-View-Controller
-    - Concept::Architecture::Pattern::MVVM         # Model-View-ViewModel
-
-    # Design Patterns
-    - Concept::Pattern::Creational::Factory        # Factory, Abstract Factory
-    - Concept::Pattern::Creational::Singleton      # Singleton
-    - Concept::Pattern::Creational::Builder        # Builder Pattern
-    - Concept::Pattern::Structural::Adapter        # Adapter, Wrapper
-    - Concept::Pattern::Structural::Decorator      # Decorator Pattern
-    - Concept::Pattern::Structural::Proxy          # Proxy Pattern
-    - Concept::Pattern::Behavioral::Observer       # Observer, Pub/Sub
-    - Concept::Pattern::Behavioral::Strategy       # Strategy Pattern
-    - Concept::Pattern::Behavioral::Command        # Command Pattern
-
-    # Concurrency Patterns
-    - Concept::Concurrency::Async::Promise         # Promises, Futures
-    - Concept::Concurrency::Async::AsyncAwait      # async/await
-    - Concept::Concurrency::Parallel::Threading    # Multi-threading
-    - Concept::Concurrency::Parallel::Multiprocessing  # Multi-processing
-    - Concept::Concurrency::Reactive::Stream       # Reactive Streams, RxJS
-    - Concept::Concurrency::Actor::Model           # Actor Model, Akka
-
-    # Security Concepts
-    - Concept::Security::Authentication::OAuth     # OAuth2, OAuth2.1
-    - Concept::Security::Authentication::JWT       # JSON Web Tokens
-    - Concept::Security::Authentication::SAML      # SAML 2.0
-    - Concept::Security::Authentication::APIKey    # API Keys
-    - Concept::Security::Authorization::RBAC       # Role-Based Access Control
-    - Concept::Security::Authorization::ABAC       # Attribute-Based Access Control
-    - Concept::Security::Encryption::Symmetric     # AES, ChaCha20
-    - Concept::Security::Encryption::Asymmetric    # RSA, ECC
-    - Concept::Security::Hashing::Cryptographic    # SHA-256, bcrypt, Argon2
-    - Concept::Security::TLS::Protocol             # TLS 1.3, mTLS
-
-    # AI/ML Concepts
-    - Concept::AI::Training::Transfer              # Transfer Learning
-    - Concept::AI::Training::Supervised            # Supervised Learning
-    - Concept::AI::Training::Unsupervised          # Unsupervised Learning
-    - Concept::AI::Training::Reinforcement         # Reinforcement Learning
-    - Concept::AI::Training::SelfSupervised        # Self-Supervised Learning
-    - Concept::AI::Inference::Sampling::Temperature  # Temperature Sampling
-    - Concept::AI::Inference::Sampling::TopP       # Nucleus Sampling
-    - Concept::AI::Inference::Sampling::TopK       # Top-K Sampling
-    - Concept::AI::Inference::Sampling::Beam       # Beam Search
-    - Concept::AI::Context::RAG                    # Retrieval-Augmented Generation
-    - Concept::AI::Context::InContext              # In-context Learning
-    - Concept::AI::Context::FewShot                # Few-shot Learning
-    - Concept::AI::Context::ZeroShot               # Zero-shot Learning
-    - Concept::AI::Optimization::Quantization      # Model Quantization
-    - Concept::AI::Optimization::Pruning           # Model Pruning
-    - Concept::AI::Optimization::Distillation      # Knowledge Distillation
+    - Concept::Paradigm                            # Programming paradigms
+    - Concept::Pattern                             # Design patterns
+    - Concept::Architecture                        # Architectural patterns
+    - Concept::Methodology                         # Development methodologies
+    - Concept::Practice                            # Best practices
+    - Concept::Principle                           # Design principles
+    - Concept::Standard                            # Standards
+    - Concept::Specification                       # Specifications
 
   # ============================================================================
-  # STANDARD ENTITIES (20 types)
+  # SECURITY (6 types)
   # ============================================================================
-  standard:
-    - Person::Individual::Developer                # Software developers, engineers
-    - Person::Individual::Researcher               # AI researchers, scientists
-    - Person::Individual::Executive                # CEOs, CTOs, founders
-    - Organization::Company::Tech::AI              # OpenAI, Anthropic, Mistral
-    - Organization::Company::Tech::Cloud           # AWS, Microsoft, Google
-    - Organization::Company::Tech::Database        # MongoDB, Neo4j, Redis Labs
-    - Organization::Company::Tech::Software        # Microsoft, Oracle, SAP
-    - Organization::OpenSource::Foundation         # Linux Foundation, Apache, CNCF
-    - Organization::Research::Lab::AI              # DeepMind, FAIR, Google Brain, OpenAI
-    - Organization::Research::Lab::Academic        # MIT CSAIL, Stanford AI Lab
-    - Location::Region::Continent                  # North America, Europe, Asia
-    - Location::Region::Country                    # United States, China, UK
-    - Location::City::TechHub                      # San Francisco, Seattle, London
-    - Date::Timestamp::Event                       # Release dates, announcements
-    - Date::Period::Era                            # AI era, Web3 era
-    - Product::Software::Application               # Software products
+  security:
+    - Security::Authentication                     # Authentication methods
+    - Security::Authorization                      # Authorization methods
+    - Security::Encryption                         # Encryption
+    - Security::Protocol                           # Security protocols
+    - Security::Tool                               # Security tools
+    - Security::Vulnerability                      # Vulnerabilities, CVEs
+
+  # ============================================================================
+  # PRODUCTS & CONTENT (13 types)
+  # ============================================================================
+  products:
+    - Product::Software                            # Software products
+    - Product::Software::Application               # Software applications
     - Product::Software::API                       # API products and services
+    - Product::Hardware                            # Hardware products
     - Product::Hardware::Device                    # GPUs, TPUs, servers
+    - Product::Service                             # Service products
     - Product::Cloud::Service                      # Cloud services and platforms
-    - Metric::Performance::Benchmark               # MMLU, HumanEval, benchmarks
+    - Product::API                                 # API products
+    - Product::Platform                            # Platform products
+    - Product::Dataset                             # Datasets
+    - Product::Model                               # Pre-trained models
+    - Content::Documentation                       # Documentation
+    - Content::Tutorial                            # Tutorials, guides
+
+  # ============================================================================
+  # METRICS & MEASUREMENTS (5 types)
+  # ============================================================================
+  metrics:
+    - Metric::Performance                          # Performance metrics
+    - Metric::Performance::Benchmark               # Benchmarks (MMLU, HumanEval, etc.)
+    - Metric::Benchmark                            # General benchmarks
+    - Metric::Quality                              # Quality metrics
+    - Metric::Business                             # Business metrics
+
+# Total: 119 types (slightly over but comprehensive)
+# Balanced between technical specificity and broad coverage
+# Includes all standard utility types (people, locations, dates, companies, products)

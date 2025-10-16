@@ -36,7 +36,10 @@ class Settings(BaseSettings):
     # vLLM Configuration
     VLLM_BASE_URL: str = Field(default="http://localhost:8078", env="VLLM_BASE_URL")
     VLLM_MODEL_NAME: Optional[str] = None  # Discovered at runtime
-    VLLM_TIMEOUT: int = 120  # seconds
+    VLLM_TIMEOUT: int = Field(
+        default=600,
+        env="VLLM_TIMEOUT"
+    )  # seconds (relationship extraction needs more time)
     VLLM_MAX_TOKENS: int = 4096
     VLLM_TEMPERATURE: float = 0.1  # Low temperature for consistent extraction
     VLLM_RETRY_INTERVAL: int = 30  # seconds between retries
@@ -47,17 +50,26 @@ class Settings(BaseSettings):
         default="urchade/gliner_large-v2.1",
         env="GLINER_MODEL"
     )
-    GLINER_THRESHOLD: float = 0.5  # Confidence threshold
+    GLINER_THRESHOLD: float = Field(
+        default=0.4,
+        env="GLINER_THRESHOLD"
+    )  # Confidence threshold
     GLINER_BATCH_SIZE: int = 8
     GLINER_MAX_LENGTH: int = 384  # tokens
 
     # Entity Extraction Settings
     ENTITY_TAXONOMY_PATH: str = "taxonomy/entities.yaml"
-    ENTITY_MIN_CONFIDENCE: float = 0.5
+    ENTITY_MIN_CONFIDENCE: float = Field(
+        default=0.4,
+        env="GLINER_THRESHOLD"
+    )  # Use same threshold as GLiNER
     ENTITY_DEDUPLICATION: bool = True
 
     # Relationship Extraction Settings
-    RELATION_MIN_CONFIDENCE: float = 0.6
+    RELATION_MIN_CONFIDENCE: float = Field(
+        default=0.45,
+        env="RELATION_MIN_CONFIDENCE"
+    )  # Relationship confidence threshold
     RELATION_MAX_DISTANCE: int = 3  # Max sentence distance between entities
     RELATION_CONTEXT_WINDOW: int = 200  # characters
 

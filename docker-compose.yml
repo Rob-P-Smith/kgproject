@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   neo4j:
     image: neo4j:5.25-community
@@ -19,7 +17,7 @@ services:
 
       # Memory settings (adjust based on your system)
       - NEO4J_server_memory_heap_initial__size=512m
-      - NEO4J_server_memory_heap_max__size=32G
+      - NEO4J_server_memory_heap_max__size=16G
       - NEO4J_server_memory_pagecache_size=2G
 
       # APOC plugin configuration
@@ -45,6 +43,65 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+
+  kg-service:
+    build:
+      context: ./kg-service
+      dockerfile: Dockerfile
+    container_name: kg-service
+    restart: unless-stopped
+    network_mode: "host"  # Use host network to access vLLM directly
+    volumes:
+      - ./kg-service:/app
+      - kg-models:/app/models  # Persistent model cache
+    environment:
+      # Service configuration
+      - SERVICE_NAME=${KG_SERVICE_NAME:-kg-service}
+      - SERVICE_VERSION=${KG_SERVICE_VERSION:-1.0.0}
+      - API_HOST=0.0.0.0
+      - API_PORT=8088
+      - DEBUG=${KG_DEBUG:-false}
+      - LOG_LEVEL=${KG_LOG_LEVEL:-INFO}
+
+      # Neo4j connection (use localhost since we're on host network)
+      - NEO4J_URI=bolt://localhost:7687
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-knowledge_graph_2024}
+      - NEO4J_DATABASE=neo4j
+      - NEO4J_MAX_CONNECTION_LIFETIME=3600
+      - NEO4J_MAX_CONNECTION_POOL_SIZE=50
+      - NEO4J_CONNECTION_TIMEOUT=30
+
+      # vLLM connection (localhost since both use host network)
+      - VLLM_BASE_URL=${VLLM_BASE_URL:-http://localhost:8078}
+      - VLLM_TIMEOUT=600
+      - VLLM_MAX_TOKENS=4096
+      - VLLM_TEMPERATURE=0.1
+
+      # GLiNER configuration
+      - GLINER_MODEL=${GLINER_MODEL:-urchade/gliner_large-v2.1}
+      - GLINER_THRESHOLD=${GLINER_THRESHOLD:-0.45}
+      - GLINER_BATCH_SIZE=8
+
+      # Relationship extraction
+      - RELATION_MAX_DISTANCE=5
+      - RELATION_MIN_CONFIDENCE=${RELATION_MIN_CONFIDENCE:-0.35}
+      - RELATION_CONTEXT_WINDOW=100
+
+    depends_on:
+      neo4j:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8088/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  kg-models:
+    name: kg-models
 
 networks:
   crawler_default:

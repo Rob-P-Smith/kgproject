@@ -94,7 +94,7 @@ class RelationshipExtractor:
 
     def __init__(self):
         """Initialize relationship extractor"""
-        self.vllm_client = get_vllm_client()
+        self.vllm_client = None  # Will be initialized in async methods
         self.max_entity_distance = settings.RELATION_MAX_DISTANCE  # sentences
         self.min_confidence = settings.RELATION_MIN_CONFIDENCE
         self.context_window = settings.RELATION_CONTEXT_WINDOW  # characters
@@ -105,6 +105,15 @@ class RelationshipExtractor:
             self.all_relationship_types.extend(category_types)
 
         logger.info(f"Relationship extractor initialized with {len(self.all_relationship_types)} relationship types")
+
+    async def _ensure_vllm_client(self):
+        """Ensure vLLM client is initialized (lazy async initialization)"""
+        if self.vllm_client is None:
+            self.vllm_client = await get_vllm_client()
+            # Ensure model is discovered and available
+            await self.vllm_client.ensure_model()
+            logger.info(f"vLLM client ready with model: {self.vllm_client.model_name}")
+        return self.vllm_client
 
     def _build_extraction_prompt(
         self,
@@ -187,21 +196,43 @@ Return ONLY the JSON array, no additional text."""
     ) -> List[Dict[str, Any]]:
         """Parse LLM response and validate relationships"""
 
-        # Extract JSON from response
+        # Remove markdown code fences if present
+        response = response.replace("```json", "").replace("```", "").strip()
+
+        # Extract JSON from response - handle multiple arrays (example + actual)
         try:
-            # Try to find JSON array in response
-            json_match = re.search(r'\[.*\]', response, re.DOTALL)
-            if not json_match:
+            # Find all JSON arrays in output
+            arrays = []
+            start = 0
+            while True:
+                start_pos = response.find("[", start)
+                if start_pos < 0:
+                    break
+                end_pos = response.find("]", start_pos) + 1
+                if end_pos > start_pos:
+                    try:
+                        json_str = response[start_pos:end_pos]
+                        arr = json.loads(json_str)
+                        if isinstance(arr, list):
+                            arrays.append(arr)
+                    except json.JSONDecodeError:
+                        pass
+                    start = end_pos
+                else:
+                    break
+
+            # Prefer the longest array (actual data vs example)
+            if not arrays:
                 logger.warning("No JSON array found in LLM response")
                 return []
 
-            relationships = json.loads(json_match.group(0))
+            relationships = max(arrays, key=len)
 
             if not isinstance(relationships, list):
                 logger.warning("LLM response is not a list")
                 return []
 
-        except json.JSONDecodeError as e:
+        except Exception as e:
             logger.error(f"Failed to parse LLM response as JSON: {e}")
             logger.debug(f"Response: {response[:500]}")
             return []
@@ -369,16 +400,25 @@ Return ONLY the JSON array, no additional text."""
         if len(entities) < 2:
             return []
 
+        # Ensure vLLM client is initialized
+        await self._ensure_vllm_client()
+
+        logger.info(f"vLLM client initialized, model_name: {self.vllm_client.model_name}")
+
         # Build prompt
         prompt = self._build_extraction_prompt(text, entities)
 
+        logger.debug(f"Built prompt with {len(entities)} entities, prompt length: {len(prompt)}")
+
         # Call vLLM
         try:
+            logger.info("Calling vLLM for relationship extraction...")
             response = await self.vllm_client.complete(
                 prompt=prompt,
                 max_tokens=settings.VLLM_MAX_TOKENS,
                 temperature=settings.VLLM_TEMPERATURE
             )
+            logger.info(f"vLLM response received, length: {len(response)}")
 
             # Parse response
             relationships = self._parse_llm_response(response, entities)

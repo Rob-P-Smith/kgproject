@@ -137,6 +137,54 @@ class EntityExtractor:
             "sentence": sentence
         }
 
+    def _chunk_text_for_gliner(self, text: str, max_chars: int = 1000) -> List[Dict[str, Any]]:
+        """
+        Split text into chunks suitable for GLiNER (aligned with RAG chunking)
+
+        Args:
+            text: Full text to split
+            max_chars: Maximum characters per chunk (default 1000, aligned with RAG database)
+
+        Returns:
+            List of chunks with {text, char_start, char_end}
+        """
+        chunks = []
+        words = text.split()
+        current_chunk = []
+        current_length = 0
+        char_position = 0
+
+        for word in words:
+            word_len = len(word) + 1  # +1 for space
+
+            if current_length + word_len > max_chars and current_chunk:
+                # Save current chunk
+                chunk_text = ' '.join(current_chunk)
+                chunks.append({
+                    "text": chunk_text,
+                    "char_start": char_position,
+                    "char_end": char_position + len(chunk_text)
+                })
+                char_position += len(chunk_text) + 1  # +1 for space between chunks
+
+                # Start new chunk
+                current_chunk = [word]
+                current_length = word_len
+            else:
+                current_chunk.append(word)
+                current_length += word_len
+
+        # Add final chunk
+        if current_chunk:
+            chunk_text = ' '.join(current_chunk)
+            chunks.append({
+                "text": chunk_text,
+                "char_start": char_position,
+                "char_end": char_position + len(chunk_text)
+            })
+
+        return chunks
+
     def extract(
         self,
         text: str,
@@ -145,6 +193,8 @@ class EntityExtractor:
     ) -> List[Dict[str, Any]]:
         """
         Extract entities from text with hierarchical typing
+
+        Automatically chunks long text to handle GLiNER's 384 token limit.
 
         Args:
             text: Input text to process
@@ -162,16 +212,41 @@ class EntityExtractor:
         threshold = threshold or self.threshold
 
         try:
-            logger.debug(f"Extracting entities from text ({len(text)} chars)")
+            # Split text into GLiNER-compatible chunks if needed
+            text_length = len(text)
+            if text_length > 1500:
+                logger.info(f"Text is {text_length} chars, splitting into chunks for GLiNER...")
+                gliner_chunks = self._chunk_text_for_gliner(text)
+                logger.info(f"Split into {len(gliner_chunks)} chunks for GLiNER processing")
 
-            # Run GLiNER prediction
-            predictions = self.model.predict_entities(
-                text,
-                entity_types,
-                threshold=threshold
-            )
+                # Extract from each chunk
+                all_entities = []
+                for i, chunk in enumerate(gliner_chunks):
+                    logger.debug(f"Processing GLiNER chunk {i+1}/{len(gliner_chunks)} ({len(chunk['text'])} chars)")
+                    predictions = self.model.predict_entities(
+                        chunk["text"],
+                        entity_types,
+                        threshold=threshold
+                    )
 
-            logger.debug(f"GLiNER returned {len(predictions)} predictions")
+                    # Adjust positions to document coordinates
+                    for pred in predictions:
+                        pred["start"] += chunk["char_start"]
+                        pred["end"] += chunk["char_start"]
+
+                    all_entities.extend(predictions)
+
+                predictions = all_entities
+                logger.info(f"GLiNER returned {len(predictions)} total predictions from all chunks")
+            else:
+                logger.debug(f"Extracting entities from text ({len(text)} chars)")
+                # Run GLiNER prediction on short text
+                predictions = self.model.predict_entities(
+                    text,
+                    entity_types,
+                    threshold=threshold
+                )
+                logger.debug(f"GLiNER returned {len(predictions)} predictions")
 
             # Process predictions
             entities = []

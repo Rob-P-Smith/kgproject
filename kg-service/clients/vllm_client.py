@@ -208,6 +208,12 @@ class VLLMClient:
 
         except httpx.HTTPError as e:
             logger.error(f"HTTP error during completion: {e}")
+            logger.error(f"HTTP error type: {type(e).__name__}")
+            logger.error(f"Request model: {request_data.get('model')}")
+            logger.error(f"Request prompt length: {len(request_data.get('prompt', ''))}")
+            if hasattr(e, 'response') and e.response:
+                logger.error(f"Response status: {e.response.status_code}")
+                logger.error(f"Response text: {e.response.text[:500]}")
             self.reset_model_state()
             raise ModelUnavailableError(f"vLLM request failed: {e}")
         except Exception as e:

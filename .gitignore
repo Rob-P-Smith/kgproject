@@ -30,3 +30,43 @@ Thumbs.db
 # Backups
 *.tar.gz
 *.backup
+backup_*/
+
+# Archived documentation
+docs/archive/
+
+# Test records and temporary test files
+test_record.md
+*_test_record.md
+kg-service/test_record.md
+
+# Model cache (large files)
+kg-service/models/
+*.bin
+*.safetensors
+
+# Logs
+*.log
+logs/
+kg-service/logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Docker volumes (if accidentally created locally)
+neo4j/import/*
+!neo4j/import/.gitkeep
+
+# pytest cache
+.pytest_cache/
+*.pyc
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
