@@ -113,21 +113,21 @@ class Neo4jClient:
             content_id: Unique content identifier from mcpragcrawl4ai
             url: Document URL
             title: Document title
-            metadata: Additional metadata
+            metadata: Additional metadata (flattened into individual properties)
 
         Returns:
             Neo4j node ID (elementId)
         """
-        # Neo4j can't store empty dicts, so convert None or empty dict to null
-        metadata_value = metadata if (metadata and len(metadata) > 0) else None
+        # NOTE: metadata is NOT stored in Neo4j (it's a graph DB, not a document store)
+        # Full content and metadata remain in SQLite, referenced by content_id
+        # metadata parameter is kept for API compatibility but not used here
 
         query = """
         MERGE (d:Document {content_id: $content_id})
         SET d.url = $url,
             d.title = $title,
             d.created_at = COALESCE(d.created_at, datetime()),
-            d.updated_at = datetime(),
-            d.metadata = $metadata
+            d.updated_at = datetime()
         RETURN elementId(d) AS node_id
         """
 
@@ -136,8 +136,7 @@ class Neo4jClient:
                 query,
                 content_id=content_id,
                 url=url,
-                title=title,
-                metadata=metadata_value
+                title=title
             )
             record = await result.single()
             return record["node_id"]

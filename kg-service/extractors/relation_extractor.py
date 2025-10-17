@@ -356,7 +356,7 @@ Return ONLY the JSON array, no additional text."""
         logger.info(f"Extracting relationships from {len(entity_mentions)} entities")
 
         # For large documents, process in chunks to avoid context limits
-        max_text_length = 8000  # characters
+        max_text_length = 30000  # characters
         if len(text) > max_text_length:
             logger.info(f"Document too long ({len(text)} chars), processing in sections")
             # Process sections with entity overlap
@@ -365,7 +365,7 @@ Return ONLY the JSON array, no additional text."""
             # Split into sections while keeping entities together
             section_size = max_text_length
             for i in range(0, len(text), section_size):
-                section_text = text[i:i + section_size + 1000]  # Overlap
+                section_text = text[i:i + section_size + 3000]  # Overlap (10% of section size)
 
                 # Filter entities in this section
                 section_entities = [

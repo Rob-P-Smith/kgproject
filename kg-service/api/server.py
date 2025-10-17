@@ -29,6 +29,9 @@ from pipeline.processor import KGProcessor
 from clients.vllm_client import get_vllm_client, close_vllm_client
 from extractors.entity_extractor import get_entity_extractor
 
+# Import search endpoints
+from api.search_endpoints import router as search_router
+
 logger = logging.getLogger(__name__)
 
 # Global state
@@ -121,6 +124,9 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Register routers
+app.include_router(search_router)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -170,7 +176,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
             success=False,
             error=exc.detail,
             error_type="HTTPException",
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow().isoformat()
         ).dict()
     )
 
@@ -186,7 +192,7 @@ async def general_exception_handler(request: Request, exc: Exception):
             success=False,
             error=str(exc),
             error_type=type(exc).__name__,
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow().isoformat()
         ).dict()
     )
 

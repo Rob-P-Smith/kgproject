@@ -377,7 +377,7 @@ class ErrorResponse(BaseModel):
     error: str = Field(..., description="Error message")
     error_type: str = Field(..., description="Error type")
     content_id: Optional[int] = Field(None, description="Content ID if available")
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
     class Config:
         schema_extra = {

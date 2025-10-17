@@ -78,7 +78,7 @@ class Settings(BaseSettings):
     COOCCURRENCE_MIN_COUNT: int = 2
 
     # Processing Settings
-    MAX_CONCURRENT_REQUESTS: int = 10
+    MAX_CONCURRENT_REQUESTS: int = 8
     REQUEST_TIMEOUT: int = 300  # seconds
     ENABLE_ASYNC_PROCESSING: bool = True
 
