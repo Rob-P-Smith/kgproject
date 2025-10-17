@@ -40,7 +40,7 @@ class Settings(BaseSettings):
         default=600,
         env="VLLM_TIMEOUT"
     )  # seconds (relationship extraction needs more time)
-    VLLM_MAX_TOKENS: int = 4096
+    VLLM_MAX_TOKENS: int = 65536  # Large limit for guided JSON output
     VLLM_TEMPERATURE: float = 0.1  # Low temperature for consistent extraction
     VLLM_RETRY_INTERVAL: int = 30  # seconds between retries
     VLLM_MAX_RETRIES: int = 3

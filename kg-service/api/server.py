@@ -336,11 +336,12 @@ async def ingest_document(request: IngestRequest):
     start_time = time.time()
 
     logger.info("=" * 60)
-    logger.info(f"Processing document: {request.url}")
-    logger.info(f"Content ID: {request.content_id}")
-    logger.info(f"Title: {request.title}")
-    logger.info(f"Markdown length: {len(request.markdown)} chars")
-    logger.info(f"Chunks: {len(request.chunks)}")
+    logger.info(f"📥 RECEIVED DOCUMENT from mcpragcrawl4ai")
+    logger.info(f"   URL: {request.url}")
+    logger.info(f"   Content ID: {request.content_id}")
+    logger.info(f"   Title: {request.title}")
+    logger.info(f"   Markdown: {len(request.markdown)} chars")
+    logger.info(f"   Chunks: {len(request.chunks)}")
     logger.info("=" * 60)
 
     try:
@@ -384,10 +385,13 @@ async def ingest_document(request: IngestRequest):
             summary=result["summary"]
         )
 
-        logger.info(f"✓ Processing complete:")
-        logger.info(f"  - Entities: {result['entities_extracted']}")
-        logger.info(f"  - Relationships: {result['relationships_extracted']}")
-        logger.info(f"  - Time: {processing_time_ms}ms")
+        logger.info("=" * 60)
+        logger.info(f"📤 RETURNING TO mcpragcrawl4ai")
+        logger.info(f"   Content ID: {request.content_id}")
+        logger.info(f"   Entities: {result['entities_extracted']}")
+        logger.info(f"   Relationships: {result['relationships_extracted']}")
+        logger.info(f"   Neo4j Doc ID: {result['neo4j_document_id']}")
+        logger.info(f"   Processing Time: {processing_time_ms}ms")
         logger.info("=" * 60)
 
         return response

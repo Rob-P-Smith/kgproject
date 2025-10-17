@@ -175,7 +175,7 @@ class ExtractedEntity(BaseModel):
 
     # Metadata
     confidence: float = Field(..., ge=0.0, le=1.0, description="Extraction confidence")
-    neo4j_node_id: str = Field(..., description="Neo4j node ID")
+    neo4j_node_id: Optional[str] = Field(None, description="Neo4j node ID")
 
     # Context
     context_before: str = Field("", description="Text before entity")
@@ -224,10 +224,10 @@ class ExtractedRelationship(BaseModel):
     """Relationship between two entities"""
 
     subject_text: str = Field(..., description="Subject entity text")
-    subject_neo4j_id: str = Field(..., description="Subject Neo4j node ID")
+    subject_neo4j_id: Optional[str] = Field(None, description="Subject Neo4j node ID")
     predicate: str = Field(..., description="Relationship type (uses, implements, etc.)")
     object_text: str = Field(..., description="Object entity text")
-    object_neo4j_id: str = Field(..., description="Object Neo4j node ID")
+    object_neo4j_id: Optional[str] = Field(None, description="Object Neo4j node ID")
 
     confidence: float = Field(..., ge=0.0, le=1.0, description="Extraction confidence")
     context: str = Field(..., description="Sentence where relationship found")

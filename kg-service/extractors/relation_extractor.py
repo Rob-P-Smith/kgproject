@@ -11,11 +11,27 @@ from dataclasses import dataclass
 import json
 import re
 
+from pydantic import BaseModel, Field
 from clients.vllm_client import get_vllm_client
 from config import get_settings
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
+
+
+# Pydantic models for vLLM guided JSON schema
+class RelationshipItem(BaseModel):
+    """Single relationship for vLLM guided JSON output"""
+    subject: str = Field(description="Entity name from the entity list (exact match)")
+    predicate: str = Field(description="Relationship type in snake_case (e.g., uses, implements, part_of)")
+    object: str = Field(description="Target entity name from the entity list (exact match)")
+    confidence: float = Field(ge=0.0, le=1.0, description="Confidence score between 0 and 1")
+    context: str = Field(description="Brief supporting text from the document")
+
+
+class RelationshipResponse(BaseModel):
+    """vLLM guided JSON response format for relationship extraction"""
+    relationships: List[RelationshipItem] = Field(description="Array of extracted relationships")
 
 
 @dataclass
@@ -199,42 +215,59 @@ Return ONLY the JSON array, no additional text."""
         # Remove markdown code fences if present
         response = response.replace("```json", "").replace("```", "").strip()
 
-        # Extract JSON from response - handle multiple arrays (example + actual)
+        relationships = []
+
+        # Try parsing as guided JSON format first (with "relationships" wrapper)
         try:
-            # Find all JSON arrays in output
-            arrays = []
-            start = 0
-            while True:
-                start_pos = response.find("[", start)
-                if start_pos < 0:
-                    break
-                end_pos = response.find("]", start_pos) + 1
-                if end_pos > start_pos:
-                    try:
-                        json_str = response[start_pos:end_pos]
-                        arr = json.loads(json_str)
-                        if isinstance(arr, list):
-                            arrays.append(arr)
-                    except json.JSONDecodeError:
-                        pass
-                    start = end_pos
+            parsed = json.loads(response)
+            if isinstance(parsed, dict) and "relationships" in parsed:
+                relationships = parsed["relationships"]
+                logger.debug(f"Parsed guided JSON format with {len(relationships)} relationships")
+            elif isinstance(parsed, list):
+                # Direct array format (old format)
+                relationships = parsed
+                logger.debug(f"Parsed direct array format with {len(relationships)} relationships")
+            else:
+                logger.warning(f"Unexpected JSON structure: {type(parsed)}")
+        except json.JSONDecodeError as e:
+            logger.warning(f"Failed to parse as complete JSON object: {e}")
+
+            # Fallback: Extract JSON from response - handle multiple arrays (example + actual)
+            try:
+                arrays = []
+                start = 0
+                while True:
+                    start_pos = response.find("[", start)
+                    if start_pos < 0:
+                        break
+                    end_pos = response.find("]", start_pos) + 1
+                    if end_pos > start_pos:
+                        try:
+                            json_str = response[start_pos:end_pos]
+                            arr = json.loads(json_str)
+                            if isinstance(arr, list):
+                                arrays.append(arr)
+                        except json.JSONDecodeError:
+                            pass
+                        start = end_pos
+                    else:
+                        break
+
+                # Prefer the longest array (actual data vs example)
+                if arrays:
+                    relationships = max(arrays, key=len)
+                    logger.debug(f"Extracted {len(relationships)} relationships from fallback array parsing")
                 else:
-                    break
+                    logger.warning("No JSON array found in LLM response")
+                    return []
 
-            # Prefer the longest array (actual data vs example)
-            if not arrays:
-                logger.warning("No JSON array found in LLM response")
+            except Exception as e:
+                logger.error(f"Failed to parse LLM response as JSON: {e}")
+                logger.debug(f"Response: {response[:500]}")
                 return []
 
-            relationships = max(arrays, key=len)
-
-            if not isinstance(relationships, list):
-                logger.warning("LLM response is not a list")
-                return []
-
-        except Exception as e:
-            logger.error(f"Failed to parse LLM response as JSON: {e}")
-            logger.debug(f"Response: {response[:500]}")
+        if not isinstance(relationships, list):
+            logger.warning("LLM response is not a list")
             return []
 
         # Build entity lookup
@@ -410,13 +443,18 @@ Return ONLY the JSON array, no additional text."""
 
         logger.debug(f"Built prompt with {len(entities)} entities, prompt length: {len(prompt)}")
 
-        # Call vLLM
+        # Get JSON schema for guided generation
+        json_schema = RelationshipResponse.model_json_schema()
+        logger.debug(f"Using guided JSON schema with {len(json_schema)} keys")
+
+        # Call vLLM with guided JSON
         try:
-            logger.info("Calling vLLM for relationship extraction...")
+            logger.info("Calling vLLM for relationship extraction with guided JSON...")
             response = await self.vllm_client.complete(
                 prompt=prompt,
                 max_tokens=settings.VLLM_MAX_TOKENS,
-                temperature=settings.VLLM_TEMPERATURE
+                temperature=settings.VLLM_TEMPERATURE,
+                extra_body={"guided_json": json_schema}
             )
             logger.info(f"vLLM response received, length: {len(response)}")
 

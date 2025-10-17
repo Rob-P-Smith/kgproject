@@ -110,17 +110,17 @@ class KGProcessor:
 
         try:
             # Step 1: Extract entities from full document
-            logger.info("Step 1: Extracting entities with GLiNER...")
+            logger.info("🔍 Step 1: Extracting entities with GLiNER...")
             entities = self.entity_extractor.extract(markdown)
-            logger.info(f"✓ Extracted {len(entities)} entities")
+            logger.info(f"✅ ENTITIES EXTRACTED: {len(entities)} entities found")
 
             # Step 2: Extract relationships
-            logger.info("Step 2: Extracting relationships with vLLM...")
+            logger.info("🔗 Step 2: Extracting relationships with vLLM...")
             relationships = await self.relation_extractor.extract_relationships(
                 markdown,
                 entities
             )
-            logger.info(f"✓ Extracted {len(relationships)} relationships")
+            logger.info(f"✅ RELATIONSHIPS EXTRACTED: {len(relationships)} relationships found")
 
             # Step 3: Map entities to chunks
             logger.info("Step 3: Mapping entities and relationships to chunks...")
@@ -137,7 +137,7 @@ class KGProcessor:
             logger.info("✓ Chunk mapping complete")
 
             # Step 4: Store in Neo4j
-            logger.info("Step 4: Storing in Neo4j...")
+            logger.info("💾 Step 4: Storing in Neo4j...")
             neo4j_result = await self._store_in_neo4j(
                 content_id=content_id,
                 url=url,
@@ -147,7 +147,11 @@ class KGProcessor:
                 entities=mapped_entities,
                 relationships=mapped_relationships
             )
-            logger.info("✓ Neo4j storage complete")
+            logger.info(f"✅ NEO4J STORAGE COMPLETE:")
+            logger.info(f"   - Document node: {neo4j_result['document_node_id']}")
+            logger.info(f"   - Chunks stored: {neo4j_result['chunk_count']}")
+            logger.info(f"   - Entities stored: {neo4j_result['entity_count']}")
+            logger.info(f"   - Relationships stored: {neo4j_result['relationship_count']}")
 
             # Calculate processing time
             processing_time = (datetime.now() - start_time).total_seconds() * 1000
