@@ -147,10 +147,18 @@ class RelationshipExtractor:
 
         entities_formatted = "\n".join(entity_list)
 
-        # Format relationship types
-        rel_types_formatted = ", ".join(self.all_relationship_types[:30])  # First 30 for brevity
+        # Format relationship types by category (show all types)
+        rel_types_formatted = []
+        for category, types in self.RELATIONSHIP_TYPES.items():
+            rel_types_formatted.append(f"- **{category.title()}**: {', '.join(types)}")
+        rel_types_formatted = "\n".join(rel_types_formatted)
 
         prompt = f"""You are an expert at extracting semantic relationships between entities in technical documentation.
+
+        
+DO NOT RETURN A SUMMARY.
+DO NOT EXPLAIN YOUR CHOICES.
+DO NOT ADD ANYTHING OUTSIDE OF THE JSON 
 
 **Text:**
 {text}
@@ -161,8 +169,10 @@ class RelationshipExtractor:
 **Task:**
 Identify meaningful relationships between the entities above. Focus on explicit relationships mentioned in the text.
 
-**Relationship Types (use these or similar):**
+**Relationship Types (organized by category):**
 {rel_types_formatted}
+
+Use the most appropriate relationship type from the categories above, or create similar snake_case predicates if needed.
 
 **Output Format:**
 Return a JSON array of relationships. Each relationship should have:
@@ -195,13 +205,16 @@ Return a JSON array of relationships. Each relationship should have:
 **Important Rules:**
 1. Only extract relationships explicitly stated in the text
 2. Subject and object MUST be entity names from the list above (exact match)
-3. Use lowercase snake_case for predicates
-4. Confidence should reflect how clearly the relationship is stated
-5. Context should be a brief quote or paraphrase from the text
+3. Use lowercase snake_case for predicates (do not deviate from this)
+4. Confidence should reflect how clearly the relationship is stated (the lower the number the lower the relationshipo strength)
+5. Context should be a brief quote or paraphrase from the text (no more than 100 words no less than 50 words)
 6. Return empty array [] if no clear relationships exist
-7. Focus on technical relationships, not trivial mentions
+7. Focus on meaningful relationships, not trivial mentions, something that matches the relationships selections earlier 
 
-Return ONLY the JSON array, no additional text."""
+Return ONLY the JSON array, no additional text.
+DO NOT RETURN A SUMMARY.
+DO NOT EXPLAIN YOUR CHOICES.
+DO NOT ADD ANYTHING OUTSIDE OF THE JSON """
 
         return prompt
 
@@ -212,59 +225,58 @@ Return ONLY the JSON array, no additional text."""
     ) -> List[Dict[str, Any]]:
         """Parse LLM response and validate relationships"""
 
-        # Remove markdown code fences if present
+        # Remove markdown code fences and extra backticks
         response = response.replace("```json", "").replace("```", "").strip()
 
         relationships = []
 
-        # Try parsing as guided JSON format first (with "relationships" wrapper)
+        # Extract JSON arrays from response - handle multiple arrays (example + actual)
         try:
-            parsed = json.loads(response)
-            if isinstance(parsed, dict) and "relationships" in parsed:
-                relationships = parsed["relationships"]
-                logger.debug(f"Parsed guided JSON format with {len(relationships)} relationships")
-            elif isinstance(parsed, list):
-                # Direct array format (old format)
-                relationships = parsed
-                logger.debug(f"Parsed direct array format with {len(relationships)} relationships")
-            else:
-                logger.warning(f"Unexpected JSON structure: {type(parsed)}")
-        except json.JSONDecodeError as e:
-            logger.warning(f"Failed to parse as complete JSON object: {e}")
+            arrays = []
+            start = 0
+            while True:
+                start_pos = response.find("[", start)
+                if start_pos < 0:
+                    break
 
-            # Fallback: Extract JSON from response - handle multiple arrays (example + actual)
-            try:
-                arrays = []
-                start = 0
-                while True:
-                    start_pos = response.find("[", start)
-                    if start_pos < 0:
-                        break
-                    end_pos = response.find("]", start_pos) + 1
-                    if end_pos > start_pos:
-                        try:
-                            json_str = response[start_pos:end_pos]
-                            arr = json.loads(json_str)
-                            if isinstance(arr, list):
-                                arrays.append(arr)
-                        except json.JSONDecodeError:
-                            pass
-                        start = end_pos
-                    else:
-                        break
+                # Find the matching closing bracket
+                bracket_count = 0
+                end_pos = start_pos
+                for i in range(start_pos, len(response)):
+                    if response[i] == '[':
+                        bracket_count += 1
+                    elif response[i] == ']':
+                        bracket_count -= 1
+                        if bracket_count == 0:
+                            end_pos = i + 1
+                            break
 
-                # Prefer the longest array (actual data vs example)
-                if arrays:
-                    relationships = max(arrays, key=len)
-                    logger.debug(f"Extracted {len(relationships)} relationships from fallback array parsing")
+                if end_pos > start_pos:
+                    try:
+                        json_str = response[start_pos:end_pos]
+                        arr = json.loads(json_str)
+                        if isinstance(arr, list):
+                            arrays.append(arr)
+                            logger.debug(f"Found valid JSON array with {len(arr)} items")
+                    except json.JSONDecodeError as e:
+                        logger.debug(f"Failed to parse JSON array at position {start_pos}: {e}")
+                    start = end_pos
                 else:
-                    logger.warning("No JSON array found in LLM response")
-                    return []
+                    break
 
-            except Exception as e:
-                logger.error(f"Failed to parse LLM response as JSON: {e}")
-                logger.debug(f"Response: {response[:500]}")
+            # Prefer the longest array (actual data vs example)
+            if arrays:
+                relationships = max(arrays, key=len)
+                logger.debug(f"Extracted {len(relationships)} relationships from array parsing")
+            else:
+                logger.warning("No JSON array found in LLM response")
+                logger.debug(f"Response preview: {response[:500]}")
                 return []
+
+        except Exception as e:
+            logger.error(f"Failed to parse LLM response as JSON: {e}")
+            logger.debug(f"Response: {response[:500]}")
+            return []
 
         if not isinstance(relationships, list):
             logger.warning("LLM response is not a list")
@@ -314,7 +326,7 @@ Return ONLY the JSON array, no additional text."""
                     "object_normalized": object_entity.normalized,
                     "object_type": object_entity.type_full,
                     "confidence": confidence,
-                    "context": rel.get("context", "")[:500],  # Limit context length
+                    "context": rel.get("context", "")[:500],
                     "subject_start": subject_entity.start_pos,
                     "subject_end": subject_entity.end_pos,
                     "object_start": object_entity.start_pos,
@@ -443,18 +455,13 @@ Return ONLY the JSON array, no additional text."""
 
         logger.debug(f"Built prompt with {len(entities)} entities, prompt length: {len(prompt)}")
 
-        # Get JSON schema for guided generation
-        json_schema = RelationshipResponse.model_json_schema()
-        logger.debug(f"Using guided JSON schema with {len(json_schema)} keys")
-
-        # Call vLLM with guided JSON
+        # Call vLLM for relationship extraction
         try:
-            logger.info("Calling vLLM for relationship extraction with guided JSON...")
+            logger.info("Calling vLLM for relationship extraction...")
             response = await self.vllm_client.complete(
                 prompt=prompt,
                 max_tokens=settings.VLLM_MAX_TOKENS,
-                temperature=settings.VLLM_TEMPERATURE,
-                extra_body={"guided_json": json_schema}
+                temperature=settings.VLLM_TEMPERATURE
             )
             logger.info(f"vLLM response received, length: {len(response)}")
 
@@ -477,8 +484,8 @@ Return ONLY the JSON array, no additional text."""
         """Find the sentence containing an entity"""
 
         # Find sentence boundaries
-        sentence_start = max(0, entity_start - 200)
-        sentence_end = min(len(text), entity_end + 200)
+        sentence_start = max(0, entity_start - 500)
+        sentence_end = min(len(text), entity_end + 500)
 
         # Look for sentence boundaries
         for i in range(entity_start, sentence_start, -1):

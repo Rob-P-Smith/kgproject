@@ -74,8 +74,8 @@ services:
 
       # vLLM connection (localhost since both use host network)
       - VLLM_BASE_URL=${VLLM_BASE_URL:-http://localhost:8078}
-      - VLLM_TIMEOUT=600
-      - VLLM_MAX_TOKENS=4096
+      - VLLM_TIMEOUT=1800
+      - VLLM_MAX_TOKENS=65536
       - VLLM_TEMPERATURE=0.1
 
       # GLiNER configuration

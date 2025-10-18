@@ -1,0 +1,25 @@
+title: Knowledge Graph Service Documentation
+description: Technical documentation for the KG-Service knowledge graph extraction and storage system
+theme: jekyll-theme-cayman
+markdown: kramdown
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: Architecture
+    url: /architecture
+  - title: API Layer
+    url: /api
+  - title: Extractors
+    url: /extractors
+  - title: Pipeline
+    url: /pipeline
+  - title: Storage
+    url: /storage
+  - title: Configuration
+    url: /configuration
